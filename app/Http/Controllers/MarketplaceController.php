@@ -26,10 +26,23 @@ class MarketplaceController extends Controller
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'string', 'max:2048'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
             'price' => ['required', 'numeric', 'min:0'],
             'available_quantity' => ['required', 'integer', 'min:0'],
         ]);
+
+        $imagePaths = [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('vegetables', 'public');
+                $imagePaths[] = Storage::url($path);
+            }
+        }
+
+        $data['image'] = $imagePaths;
+        unset($data['images']);
 
         $user->vegetables()->create($data);
 

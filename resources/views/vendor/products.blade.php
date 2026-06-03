@@ -21,17 +21,20 @@
                 <div class="grid gap-5 sm:grid-cols-2">
                     @foreach($vegetables as $vegetable)
                         <div class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
-                            <div class="h-40 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-5xl">
-                                @if($vegetable->image)
-                                    <img src="{{ $vegetable->image }}" alt="{{ $vegetable->name }}" class="w-full h-full object-cover">
+                            <div class="relative h-40 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-5xl">
+                                @if($vegetable->first_image)
+                                    <img src="{{ $vegetable->first_image }}" alt="{{ $vegetable->name }}" class="w-full h-full object-cover">
                                 @else
                                     🥬
+                                @endif
+                                @if(count($vegetable->all_images) > 1)
+                                    <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">+{{ count($vegetable->all_images) - 1 }}</span>
                                 @endif
                             </div>
                             <div class="p-5">
                                 <h2 class="font-semibold text-lg">{{ $vegetable->name }}</h2>
                                 <div class="flex items-center justify-between mt-3">
-                                    <span class="text-market-600 font-bold text-xl">${{ number_format($vegetable->price, 2) }}</span>
+                                    <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($vegetable->price, 2) }}</span>
                                     <span class="text-sm text-slate-500">{{ $vegetable->available_quantity }} in stock</span>
                                 </div>
                             </div>
@@ -48,18 +51,19 @@
                 </div>
                 <h2 class="text-lg font-semibold">Add New Vegetable</h2>
             </div>
-            <form action="{{ route('vendor.products.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('vendor.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <label class="block text-sm font-medium text-slate-700">
                     <span>Name</span>
                     <input name="name" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
                 </label>
                 <label class="block text-sm font-medium text-slate-700">
-                    <span>Image URL <span class="text-slate-400 font-normal">(optional)</span></span>
-                    <input name="image" type="url" placeholder="https://example.com/veg.jpg" class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
+                    <span>Images <span class="text-slate-400 font-normal">(optional, multiple allowed)</span></span>
+                    <input name="images[]" type="file" accept="image/*" multiple class="mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-market-700 hover:file:bg-green-100 transition cursor-pointer" />
+                    <p class="text-xs text-slate-400 mt-1">JPEG, PNG, JPG, GIF or WebP. Max 5MB each.</p>
                 </label>
                 <label class="block text-sm font-medium text-slate-700">
-                    <span>Price ($)</span>
+                    <span>Price (Rs.)</span>
                     <input name="price" type="number" step="0.01" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
                 </label>
                 <label class="block text-sm font-medium text-slate-700">

@@ -105,17 +105,20 @@
 
             @forelse($products as $product)
                 <div class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
-                    <div class="h-44 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
-                        @if($product->image)
-                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    <div class="relative h-44 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
+                        @if($product->first_image)
+                            <img src="{{ $product->first_image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                         @else
                             🥬
+                        @endif
+                        @if(count($product->all_images) > 1)
+                            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">+{{ count($product->all_images) - 1 }}</span>
                         @endif
                     </div>
                     <div class="p-5">
                         <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
                         <div class="flex items-center justify-between mt-3">
-                            <span class="text-market-600 font-bold text-xl">${{ number_format($product->price, 2) }}</span>
+                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($product->price, 2) }}</span>
                             <span class="text-sm text-slate-500">{{ $product->available_quantity }} in stock</span>
                         </div>
                     </div>
@@ -156,18 +159,21 @@
 
             @forelse($latestVeggies as $veg)
                 <div class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
-                    <div class="h-44 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
-                        @if($veg->image)
-                            <img src="{{ $veg->image }}" alt="{{ $veg->name }}" class="w-full h-full object-cover">
+                    <div class="relative h-44 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
+                        @if($veg->first_image)
+                            <img src="{{ $veg->first_image }}" alt="{{ $veg->name }}" class="w-full h-full object-cover">
                         @else
                             🥕
+                        @endif
+                        @if(count($veg->all_images) > 1)
+                            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">+{{ count($veg->all_images) - 1 }}</span>
                         @endif
                     </div>
                     <div class="p-5">
                         <h3 class="font-semibold text-lg">{{ $veg->name }}</h3>
                         <p class="text-slate-500 text-sm mb-1">by {{ $veg->vendor->name }}</p>
                         <div class="flex items-center justify-between mt-3">
-                            <span class="text-market-600 font-bold text-xl">${{ number_format($veg->price, 2) }}</span>
+                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($veg->price, 2) }}</span>
                             <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ $veg->available_quantity }} left</span>
                         </div>
                     </div>

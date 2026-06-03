@@ -19,11 +19,14 @@
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             @foreach($vegetables as $vegetable)
                 <div class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
-                    <div class="h-48 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
-                        @if($vegetable->image)
-                            <img src="{{ $vegetable->image }}" alt="{{ $vegetable->name }}" class="w-full h-full object-cover">
+                    <div class="relative h-48 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
+                        @if($vegetable->first_image)
+                            <img src="{{ $vegetable->first_image }}" alt="{{ $vegetable->name }}" class="w-full h-full object-cover">
                         @else
                             🥦
+                        @endif
+                        @if(count($vegetable->all_images) > 1)
+                            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">+{{ count($vegetable->all_images) - 1 }}</span>
                         @endif
                     </div>
                     <div class="p-5">
@@ -33,7 +36,7 @@
                             {{ $vegetable->vendor->name }}
                         </p>
                         <div class="flex items-center justify-between mt-4 pt-4 border-t border-green-50">
-                            <span class="text-market-600 font-bold text-2xl">${{ number_format($vegetable->price, 2) }}</span>
+                            <span class="text-market-600 font-bold text-2xl">Rs. {{ number_format($vegetable->price, 2) }}</span>
                             <span class="text-sm {{ $vegetable->available_quantity > 5 ? 'text-green-600' : 'text-rose-500' }}">
                                 {{ $vegetable->available_quantity > 5 ? '✓' : '⚠' }} {{ $vegetable->available_quantity }} in stock
                             </span>
