@@ -26,7 +26,8 @@
         $myProducts = $user->role === 'vendor' ? $user->vegetables()->count() : 0;
     @endphp
 
-    <div class="grid gap-5 md:grid-cols-3 mb-8">
+    <div class="grid gap-5 {{ $user->isConsumer() ? 'md:grid-cols-1' : 'md:grid-cols-3' }} mb-8">
+        @if(!$user->isConsumer())
         <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
@@ -38,6 +39,7 @@
                 </div>
             </div>
         </div>
+        @endif
         <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
@@ -49,6 +51,7 @@
                 </div>
             </div>
         </div>
+        @if(!$user->isConsumer())
         <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
@@ -60,6 +63,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 
     {{-- Role-specific content --}}
@@ -117,9 +121,17 @@
                     </div>
                     <div class="p-5">
                         <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
+                        <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium
+                            {{ $product->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
+                            {{ $product->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
+                            {{ $product->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
+                            {{ $product->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
+                            {{ $product->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
+                            {{ $product->condition }}
+                        </span>
                         <div class="flex items-center justify-between mt-3">
-                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($product->price, 2) }}</span>
-                            <span class="text-sm text-slate-500">{{ $product->available_quantity }} in stock</span>
+                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($product->price, 2) }} <span class="text-sm font-normal text-slate-400">/ kg</span></span>
+                            <span class="text-sm text-slate-500">{{ $product->available_quantity }} kg in stock</span>
                         </div>
                     </div>
                 </div>
@@ -158,7 +170,7 @@
             @php $latestVeggies = App\Models\Vegetable::with('vendor')->where('available_quantity', '>', 0)->latest()->take(3)->get(); @endphp
 
             @forelse($latestVeggies as $veg)
-                <div class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
+                <a href="{{ route('product.view', $veg) }}" class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
                     <div class="relative h-44 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
                         @if($veg->first_image)
                             <img src="{{ $veg->first_image }}" alt="{{ $veg->name }}" class="w-full h-full object-cover">
@@ -172,12 +184,20 @@
                     <div class="p-5">
                         <h3 class="font-semibold text-lg">{{ $veg->name }}</h3>
                         <p class="text-slate-500 text-sm mb-1">by {{ $veg->vendor->name }}</p>
-                        <div class="flex items-center justify-between mt-3">
-                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($veg->price, 2) }}</span>
-                            <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ $veg->available_quantity }} left</span>
+                        <span class="inline-block mb-2 text-xs px-2 py-0.5 rounded-full font-medium
+                            {{ $veg->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
+                            {{ $veg->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
+                            {{ $veg->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
+                            {{ $veg->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
+                            {{ $veg->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
+                            {{ $veg->condition }}
+                        </span>
+                        <div class="flex items-center justify-between mt-1">
+                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($veg->price, 2) }} <span class="text-sm font-normal text-slate-400">/ kg</span></span>
+                            <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ $veg->available_quantity }} kg left</span>
                         </div>
                     </div>
-                </div>
+                </a>
             @empty
                 <div class="col-span-full rounded-2xl border-2 border-dashed border-green-200 p-10 text-center">
                     <div class="text-6xl mb-4">🛒</div>

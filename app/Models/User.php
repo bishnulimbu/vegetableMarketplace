@@ -35,6 +35,11 @@ class User extends Authenticatable
         return $this->hasMany(Vegetable::class, 'vendor_id');
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

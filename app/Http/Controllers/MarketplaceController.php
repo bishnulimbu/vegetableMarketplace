@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\Vegetable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MarketplaceController extends Controller
 {
@@ -29,7 +30,8 @@ class MarketplaceController extends Controller
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
             'price' => ['required', 'numeric', 'min:0'],
-            'available_quantity' => ['required', 'integer', 'min:0'],
+            'available_quantity' => ['required', 'numeric', 'min:0'],
+            'condition' => ['required', 'string', 'in:Fresh,Organic,Premium,Daily Harvest,Farm Fresh'],
         ]);
 
         $imagePaths = [];
@@ -49,11 +51,34 @@ class MarketplaceController extends Controller
         return back()->with('success', 'Vegetable added successfully.');
     }
 
-    public function consumerMarket()
+    public function consumerMarket(Request $request)
     {
-        $vegetables = Vegetable::with('vendor')->where('available_quantity', '>', 0)->orderByDesc('created_at')->get();
+        $query = Vegetable::with('vendor')->where('available_quantity', '>', 0);
 
-        return view('consumer.market', compact('vegetables'));
+        // Search by name
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // Filter by condition
+        if ($condition = $request->input('condition')) {
+            $query->where('condition', $condition);
+        }
+
+        // Filter by vendor
+        if ($vendor = $request->input('vendor')) {
+            $query->whereHas('vendor', fn ($q) => $q->where('name', 'like', "%{$vendor}%"));
+        }
+
+        // Sort
+        $sort = $request->input('sort', 'newest');
+        $query->orderByDesc('created_at');
+
+        $vegetables = $query->get();
+
+        $conditions = ['Fresh', 'Organic', 'Premium', 'Daily Harvest', 'Farm Fresh'];
+
+        return view('consumer.market', compact('vegetables', 'conditions'));
     }
 
     public function adminSettings()

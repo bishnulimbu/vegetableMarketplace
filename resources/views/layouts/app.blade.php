@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Vegetable Marketplace' }}</title>
+    <title>{{ $title ?? 'Digital KrishiBazaar' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,9 +41,10 @@
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2 font-bold text-xl text-market-700">
                 <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 .5-.1 1-.3 1.5l.3-.5 4 7c.6 1.1.2 2.5-.9 3.1l-.1.1c-1 .6-2.4.2-3-.9l-4-7-.3-.5A4 4 0 0 1 12 2Z"/><path d="M12 2a4 4 0 0 0-4 4c0 .5.1 1 .3 1.5l-.3-.5-4 7c-.6 1.1-.2 2.5.9 3.1l.1.1c1 .6 2.4.2 3-.9l4-7 .3-.5A4 4 0 0 0 12 2Z"/><path d="M16 18c0 2.2-1.8 4-4 4s-4-1.8-4-4"/></svg>
-                {{ config('app.name', 'Veggie Market') }}
+                Digital KrishiBazaar
             </a>
             <div class="flex items-center gap-2 text-sm">
+                <a href="{{ route('about') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">About</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Dashboard</a>
                     @if(auth()->user()->role === 'vendor')
@@ -51,6 +52,15 @@
                     @endif
                     @if(auth()->user()->role === 'consumer')
                         <a href="{{ route('consumer.market') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Market</a>
+                        <a href="{{ route('cart.view') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition flex items-center gap-1 relative">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                            Cart
+                            @php $cartCount = auth()->user()->cartItems()->count(); @endphp
+                            @if($cartCount > 0)
+                                <span class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                            @endif
+                        </a>
+                        <a href="{{ route('orders.index') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Orders</a>
                     @endif
                     @if(auth()->user()->role === 'admin')
                         <a href="{{ route('admin.settings') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Settings</a>
@@ -90,7 +100,7 @@
 
     <footer class="border-t border-green-100 bg-white/50 mt-12">
         <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-slate-500">
-            &copy; {{ date('Y') }} {{ config('app.name', 'Vegetable Marketplace') }}. Fresh from farm to table.
+            &copy; {{ date('Y') }} Digital KrishiBazaar. Empowering farmers, eliminating middlemen.
         </div>
     </footer>
 </body>

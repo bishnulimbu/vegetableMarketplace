@@ -33,9 +33,17 @@
                             </div>
                             <div class="p-5">
                                 <h2 class="font-semibold text-lg">{{ $vegetable->name }}</h2>
+                                <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium
+                                    {{ $vegetable->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
+                                    {{ $vegetable->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
+                                    {{ $vegetable->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
+                                    {{ $vegetable->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
+                                    {{ $vegetable->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
+                                    {{ $vegetable->condition }}
+                                </span>
                                 <div class="flex items-center justify-between mt-3">
-                                    <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($vegetable->price, 2) }}</span>
-                                    <span class="text-sm text-slate-500">{{ $vegetable->available_quantity }} in stock</span>
+                                    <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($vegetable->price, 2) }} <span class="text-sm font-normal text-slate-400">/ kg</span></span>
+                                    <span class="text-sm text-slate-500">{{ $vegetable->available_quantity }} kg in stock</span>
                                 </div>
                             </div>
                         </div>
@@ -63,12 +71,23 @@
                     <p class="text-xs text-slate-400 mt-1">JPEG, PNG, JPG, GIF or WebP. Max 5MB each.</p>
                 </label>
                 <label class="block text-sm font-medium text-slate-700">
+                    <span>Condition <span class="text-rose-500">*</span></span>
+                    <select name="condition" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition bg-white">
+                        <option value="" disabled selected>Select condition</option>
+                        <option value="Fresh">Fresh</option>
+                        <option value="Organic">Organic</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Daily Harvest">Daily Harvest</option>
+                        <option value="Farm Fresh">Farm Fresh</option>
+                    </select>
+                </label>
+                <label class="block text-sm font-medium text-slate-700">
                     <span>Price (Rs.)</span>
                     <input name="price" type="number" step="0.01" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
                 </label>
                 <label class="block text-sm font-medium text-slate-700">
-                    <span>Available Quantity</span>
-                    <input name="available_quantity" type="number" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
+                    <span>Available Quantity (kg)</span>
+                    <input name="available_quantity" type="number" step="0.1" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
                 </label>
                 <button type="submit" class="w-full rounded-full veg-gradient px-4 py-3 text-white font-medium hover:opacity-90 transition">Save vegetable</button>
             </form>

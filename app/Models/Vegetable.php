@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'image', 'price', 'available_quantity', 'vendor_id'])]
+#[Fillable(['name', 'image', 'price', 'available_quantity', 'vendor_id', 'condition'])]
 class Vegetable extends Model
 {
     use HasFactory;
 
     protected $casts = [
         'image' => 'array',
+        'available_quantity' => 'decimal:2',
     ];
 
     public function vendor(): BelongsTo

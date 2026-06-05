@@ -5,8 +5,8 @@
     <div class="relative overflow-hidden rounded-3xl veg-gradient p-8 md:p-12 mb-10 text-center md:text-left">
         <div class="relative z-10">
             <div class="text-5xl mb-4">🥦</div>
-            <h1 class="text-4xl font-bold text-white mb-3">{{ $settings['market_name'] ?? 'Vegetable Marketplace' }}</h1>
-            <p class="text-green-100 text-lg max-w-2xl">{{ $settings['market_description'] ?? 'Buy fresh vegetables from local vendors or sell your produce as a vendor.' }}</p>
+            <h1 class="text-4xl font-bold text-white mb-3">{{ $settings['market_name'] ?? 'Digital KrishiBazaar' }}</h1>
+            <p class="text-green-100 text-lg max-w-2xl">{{ $settings['market_description'] ?? 'A direct farm-to-consumer platform — cutting out middlemen, fair prices for all.' }}</p>
             <div class="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
                 <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-market-700 font-medium hover:bg-green-50 transition shadow-lg">
                     Get Started

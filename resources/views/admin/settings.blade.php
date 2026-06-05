@@ -20,12 +20,12 @@
             @csrf
             <label class="block text-sm font-medium text-slate-700">
                 <span>Market Name</span>
-                <input name="market_name" value="{{ old('market_name', $settings['market_name'] ?? 'Vegetable Marketplace') }}" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
+                <input name="market_name" value="{{ old('market_name', $settings['market_name'] ?? 'Digital KrishiBazaar') }}" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
             </label>
 
             <label class="block text-sm font-medium text-slate-700">
                 <span>Market Description</span>
-                <textarea name="market_description" rows="4" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition">{{ old('market_description', $settings['market_description'] ?? 'A simple marketplace for fresh vegetables.') }}</textarea>
+                <textarea name="market_description" rows="4" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition">{{ old('market_description', $settings['market_description'] ?? 'A direct farm-to-consumer platform — cutting out middlemen, fair prices for all.') }}</textarea>
             </label>
 
             <button type="submit" class="inline-flex items-center gap-2 rounded-full veg-gradient px-6 py-3 text-white font-medium hover:opacity-90 transition">
