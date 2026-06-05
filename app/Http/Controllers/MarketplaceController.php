@@ -7,6 +7,7 @@ use App\Models\Vegetable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class MarketplaceController extends Controller
 {
@@ -27,12 +28,23 @@ class MarketplaceController extends Controller
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'name_ne' => ['nullable', 'string', 'max:255'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
             'price' => ['required', 'numeric', 'min:0'],
             'available_quantity' => ['required', 'numeric', 'min:0'],
             'condition' => ['required', 'string', 'in:Fresh,Organic,Premium,Daily Harvest,Farm Fresh'],
         ]);
+
+        // Auto-translate name to Nepali if no manual name_ne provided
+        if (empty($data['name_ne'])) {
+            try {
+                $tr = new GoogleTranslate('ne');
+                $data['name_ne'] = $tr->translate($data['name']);
+            } catch (\Exception $e) {
+                // Fallback: leave name_ne null — localized_name will use English
+            }
+        }
 
         $imagePaths = [];
 

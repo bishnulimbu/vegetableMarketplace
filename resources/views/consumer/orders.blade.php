@@ -41,7 +41,7 @@
                                         🥬
                                     @endif
                                 </span>
-                                <span>{{ $item->vegetable->name }} × {{ $item->quantity }} kg</span>
+                                <span>{{ $item->vegetable->localized_name }} × {{ $item->quantity }} kg</span>
                             </div>
                         @endforeach
                     </div>

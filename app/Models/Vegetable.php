@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'image', 'price', 'available_quantity', 'vendor_id', 'condition'])]
+#[Fillable(['name', 'name_ne', 'image', 'price', 'available_quantity', 'vendor_id', 'condition'])]
 class Vegetable extends Model
 {
     use HasFactory;
@@ -31,5 +31,15 @@ class Vegetable extends Model
     public function allImages(): Attribute
     {
         return Attribute::get(fn () => $this->image ?? []);
+    }
+
+    public function localizedName(): Attribute
+    {
+        return Attribute::get(function () {
+            if (app()->getLocale() === 'ne' && $this->name_ne) {
+                return $this->name_ne;
+            }
+            return $this->name;
+        });
     }
 }

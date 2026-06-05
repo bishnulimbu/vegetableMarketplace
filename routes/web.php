@@ -15,6 +15,14 @@ Route::get('/', function () {
 
 Route::view('/about', 'about')->name('about');
 
+Route::get('language/{locale}', function (string $locale) {
+    if (! in_array($locale, config('app.supported_locales', ['en']))) {
+        abort(400);
+    }
+    session()->put('locale', $locale);
+    return back();
+})->name('language.switch');
+
 Route::get('register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('register', [AuthController::class, 'register'])->name('register.perform');
 Route::get('login', [AuthController::class, 'showLogin'])->name('login');

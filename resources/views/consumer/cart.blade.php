@@ -29,7 +29,7 @@
                             @endif
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h3 class="font-semibold text-slate-900">{{ $item->vegetable->name }}</h3>
+                            <h3 class="font-semibold text-slate-900">{{ $item->vegetable->localized_name }}</h3>
                             <p class="text-sm text-slate-500">Rs. {{ number_format($item->vegetable->price, 2) }} / kg</p>
                         </div>
                         <form action="{{ route('cart.update', $item) }}" method="POST" class="flex items-center gap-2">

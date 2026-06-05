@@ -5,7 +5,7 @@
     <div class="relative overflow-hidden rounded-3xl veg-gradient p-8 md:p-12 mb-10 text-center">
         <div class="relative z-10">
             <div class="text-6xl mb-4">🌾</div>
-            <h1 class="text-4xl font-bold text-white mb-3">About Digital KrishiBazaar</h1>
+            <h1 class="text-4xl font-bold text-white mb-3">{{ __('About') }} Digital KrishiBazaar</h1>
             <p class="text-green-100 text-lg max-w-2xl mx-auto">A direct farm-to-consumer marketplace — empowering farmers, fair prices for all.</p>
         </div>
         <div class="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-white/5"></div>

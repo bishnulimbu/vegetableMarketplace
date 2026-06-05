@@ -18,7 +18,7 @@
                             @endif
                         </div>
                         <div class="flex-1">
-                            <p class="font-medium text-slate-900">{{ $item->vegetable->name }}</p>
+                            <p class="font-medium text-slate-900">{{ $item->vegetable->localized_name }}</p>
                             <p class="text-sm text-slate-500">Qty: {{ $item->quantity }} kg × Rs. {{ number_format($item->vegetable->price, 2) }}</p>
                         </div>
                         <p class="font-bold text-market-600">Rs. {{ number_format($item->vegetable->price * $item->quantity, 2) }}</p>

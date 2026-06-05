@@ -38,9 +38,9 @@
                 <div class="px-6 pb-6">
                     <div class="flex items-center gap-2 text-sm text-slate-500 mb-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        Sold by <strong class="text-slate-700">{{ $vegetable->vendor->name }}</strong>
+                        {{ __('Sold by') }} <strong class="text-slate-700">{{ $vegetable->vendor->name }}</strong>
                     </div>
-                    <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ $vegetable->name }}</h1>
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ $vegetable->localized_name }}</h1>
 
                     <div class="flex items-baseline gap-3 mb-2">
                         <p class="text-market-600 font-bold text-4xl">Rs. {{ number_format($vegetable->price, 2) }}</p>
@@ -53,15 +53,15 @@
                         {{ $vegetable->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
                         {{ $vegetable->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
                         {{ $vegetable->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
-                        {{ $vegetable->condition }}
+                        {{ __($vegetable->condition) }}
                     </span>
 
                     <div class="flex items-center gap-3">
                         <span class="px-3 py-1 rounded-full text-sm font-medium {{ $vegetable->available_quantity > 0 ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700' }}">
                             @if($vegetable->available_quantity > 0)
-                                {{ number_format($vegetable->available_quantity, 2) }} kg in stock
+                                {{ number_format($vegetable->available_quantity, 2) }} {{ __('kg') }} {{ __('in stock') }}
                             @else
-                                Out of stock
+                                {{ __('out of stock') }}
                             @endif
                         </span>
                     </div>
@@ -72,7 +72,7 @@
         {{-- Right: Add to Cart --}}
         <div>
             <div class="sticky top-24 rounded-2xl bg-white border border-green-100 p-6">
-                <h2 class="text-lg font-semibold mb-4">Order this item</h2>
+                <h2 class="text-lg font-semibold mb-4">{{ __('Order this item') }}</h2>
 
                 @guest
                     <p class="text-slate-500 mb-4">Please <a href="{{ route('login') }}" class="text-market-600 font-medium">log in</a> to purchase.</p>
@@ -101,7 +101,7 @@
 
                         {{-- Gram quick picks --}}
                         <div>
-                            <p class="text-xs text-slate-400 mb-2">Quick gram add-ons:</p>
+                            <p class="text-xs text-slate-400 mb-2">{{ __('Quick gram add-ons') }}:</p>
                             <div class="flex gap-2 flex-wrap">
                                 @foreach([100, 200, 500] as $g)
                                     <button type="button" onclick="addGrams({{ $g }})"
@@ -118,7 +118,7 @@
                         {{-- Price breakdown --}}
                         <div class="rounded-xl bg-slate-50 p-4 space-y-2 text-sm">
                             <div class="flex justify-between text-slate-600">
-                                <span>Price per kg</span>
+                                <span>{{ __('Price per kg') }}</span>
                                 <span>Rs. {{ number_format($vegetable->price, 2) }}</span>
                             </div>
                             <div class="flex justify-between text-slate-600">

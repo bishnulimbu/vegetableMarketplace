@@ -44,34 +44,41 @@
                 Digital KrishiBazaar
             </a>
             <div class="flex items-center gap-2 text-sm">
-                <a href="{{ route('about') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">About</a>
+                {{-- Language Toggle --}}
+                <div class="flex items-center border border-slate-200 rounded-full overflow-hidden mr-1">
+                    @php $currentLocale = app()->getLocale(); @endphp
+                    <a href="{{ route('language.switch', 'en') }}" class="px-2.5 py-1.5 text-xs font-medium transition {{ $currentLocale === 'en' ? 'bg-market-600 text-white' : 'text-slate-500 hover:bg-slate-100' }}">EN</a>
+                    <a href="{{ route('language.switch', 'ne') }}" class="px-2.5 py-1.5 text-xs font-medium transition {{ $currentLocale === 'ne' ? 'bg-market-600 text-white' : 'text-slate-500 hover:bg-slate-100' }}">ने</a>
+                </div>
+
+                <a href="{{ route('about') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">{{ __('About') }}</a>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">{{ auth()->user()->isConsumer() ? __('Home') : __('Dashboard') }}</a>
                     @if(auth()->user()->role === 'vendor')
-                        <a href="{{ route('vendor.products') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">My Products</a>
+                        <a href="{{ route('vendor.products') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">{{ __('My Products') }}</a>
                     @endif
                     @if(auth()->user()->role === 'consumer')
-                        <a href="{{ route('consumer.market') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Market</a>
+                        <a href="{{ route('consumer.market') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">{{ __('Market') }}</a>
                         <a href="{{ route('cart.view') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition flex items-center gap-1 relative">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-                            Cart
+                            {{ __('Cart') }}
                             @php $cartCount = auth()->user()->cartItems()->count(); @endphp
                             @if($cartCount > 0)
                                 <span class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
                             @endif
                         </a>
-                        <a href="{{ route('orders.index') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Orders</a>
+                        <a href="{{ route('orders.index') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">{{ __('Orders') }}</a>
                     @endif
                     @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.settings') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">Settings</a>
+                        <a href="{{ route('admin.settings') }}" class="px-4 py-2 rounded-full text-slate-700 hover:bg-green-50 hover:text-market-700 transition">{{ __('Settings') }}</a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="ml-2 px-5 py-2 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 transition font-medium">Logout</button>
+                        <button type="submit" class="ml-2 px-5 py-2 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 transition font-medium">{{ __('Logout') }}</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="px-5 py-2 rounded-full text-slate-700 hover:bg-green-50 transition">Login</a>
-                    <a href="{{ route('register') }}" class="px-5 py-2 rounded-full veg-gradient text-white hover:opacity-90 transition font-medium">Get Started</a>
+                    <a href="{{ route('login') }}" class="px-5 py-2 rounded-full text-slate-700 hover:bg-green-50 transition">{{ __('Login') }}</a>
+                    <a href="{{ route('register') }}" class="px-5 py-2 rounded-full veg-gradient text-white hover:opacity-90 transition font-medium">{{ __('Get Started') }}</a>
                 @endauth
             </div>
         </div>

@@ -28,7 +28,7 @@
                                     @endif
                                 </div>
                                 <div>
-                                    <p class="font-medium text-sm text-slate-900">{{ $item->vegetable->name }}</p>
+                                    <p class="font-medium text-sm text-slate-900">{{ $item->vegetable->localized_name }}</p>
                                     <p class="text-xs text-slate-500">Qty: {{ $item->quantity }} kg × Rs. {{ number_format($item->price, 2) }}</p>
                                 </div>
                             </div>
