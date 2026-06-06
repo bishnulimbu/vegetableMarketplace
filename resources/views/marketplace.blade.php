@@ -27,20 +27,20 @@
         <div class="rounded-2xl bg-white border border-green-100 p-6 card-hover">
             <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600 text-2xl mb-4">🥦</div>
             <h2 class="font-semibold text-lg mb-2">{{ __('For Consumers') }}</h2>
-            <p class="text-slate-500 mb-4">Browse fresh vegetables, check stock, and shop directly from local vendors.</p>
-            <a href="{{ route('register') }}" class="text-market-600 font-medium text-sm hover:text-market-700">Start shopping →</a>
+            <p class="text-slate-500 mb-4">{{ __('Browse fresh vegetables, check stock, and shop directly from local vendors.') }}</p>
+            <a href="{{ route('register') }}" class="text-market-600 font-medium text-sm hover:text-market-700">{{ __('Start shopping →') }}</a>
         </div>
         <div class="rounded-2xl bg-white border border-green-100 p-6 card-hover">
             <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 text-2xl mb-4">🧑‍🌾</div>
             <h2 class="font-semibold text-lg mb-2">{{ __('For Vendors') }}</h2>
-            <p class="text-slate-500 mb-4">List your produce, set prices, and manage your inventory with ease.</p>
-            <a href="{{ route('register') }}" class="text-market-600 font-medium text-sm hover:text-market-700">Start selling →</a>
+            <p class="text-slate-500 mb-4">{{ __('List your produce, set prices, and manage your inventory with ease.') }}</p>
+            <a href="{{ route('register') }}" class="text-market-600 font-medium text-sm hover:text-market-700">{{ __('Start selling →') }}</a>
         </div>
         <div class="rounded-2xl bg-white border border-green-100 p-6 card-hover">
             <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600 text-2xl mb-4">⚙️</div>
             <h2 class="font-semibold text-lg mb-2">{{ __('For Admins') }}</h2>
-            <p class="text-slate-500 mb-4">Control marketplace settings, manage platform name and description.</p>
-            <a href="{{ route('login') }}" class="text-market-600 font-medium text-sm hover:text-market-700">Admin login →</a>
+            <p class="text-slate-500 mb-4">{{ __('Control marketplace settings, manage platform name and description.') }}</p>
+            <a href="{{ route('login') }}" class="text-market-600 font-medium text-sm hover:text-market-700">{{ __('Admin login →') }}</a>
         </div>
     </div>
 

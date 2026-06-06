@@ -43,8 +43,8 @@
                     <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ $vegetable->localized_name }}</h1>
 
                     <div class="flex items-baseline gap-3 mb-2">
-                        <p class="text-market-600 font-bold text-4xl">Rs. {{ number_format($vegetable->price, 2) }}</p>
-                        <span class="text-sm text-slate-400">/ kg</span>
+                        <p class="text-market-600 font-bold text-4xl">{{ __('Rs.') }} {{ format_price($vegetable->price) }}</p>
+                        <span class="text-sm text-slate-400">{{ __('/ kg') }}</span>
                     </div>
 
                     <span class="inline-block mb-4 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm
@@ -59,7 +59,7 @@
                     <div class="flex items-center gap-3">
                         <span class="px-3 py-1 rounded-full text-sm font-medium {{ $vegetable->available_quantity > 0 ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700' }}">
                             @if($vegetable->available_quantity > 0)
-                                {{ number_format($vegetable->available_quantity, 2) }} {{ __('kg') }} {{ __('in stock') }}
+                                {{ format_price($vegetable->available_quantity) }} {{ __('kg') }} {{ __('in stock') }}
                             @else
                                 {{ __('out of stock') }}
                             @endif
@@ -75,13 +75,13 @@
                 <h2 class="text-lg font-semibold mb-4">{{ __('Order this item') }}</h2>
 
                 @guest
-                    <p class="text-slate-500 mb-4">Please <a href="{{ route('login') }}" class="text-market-600 font-medium">log in</a> to purchase.</p>
+                    <p class="text-slate-500 mb-4">{{ __('Please log in to purchase.') }} <a href="{{ route('login') }}" class="text-market-600 font-medium">{{ __('log in') }}</a></p>
                 @elseif(Auth::user()->role !== 'consumer')
                     <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-amber-800 text-sm">
-                        Only consumers can purchase items. <a href="{{ route('register') }}" class="font-medium underline">Create a consumer account</a>.
+                        {{ __('Only consumers can purchase items.') }} <a href="{{ route('register') }}" class="font-medium underline">{{ __('Create a consumer account') }}</a>.
                     </div>
                 @elseif($vegetable->available_quantity < 0.1)
-                    <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-rose-700 text-sm">This item is currently out of stock.</div>
+                    <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-rose-700 text-sm">{{ __('This item is currently out of stock.') }}</div>
                 @else
                     <form action="{{ route('cart.add', $vegetable) }}" method="POST" class="space-y-5">
                         @csrf
@@ -89,7 +89,7 @@
 
                         {{-- KG Selector --}}
                         <label class="block text-sm font-medium text-slate-700">
-                            <span>Quantity (kg)</span>
+                            <span>{{ __('Quantity') }} ({{ __('kg') }})</span>
                             <div class="mt-2 flex items-center gap-3">
                                 <button type="button" onclick="adjustKg(-0.5)" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition text-lg font-medium">−</button>
                                 <input id="kgInput" type="number" value="1" min="0.1" step="0.1" max="{{ $vegetable->available_quantity }}"
@@ -119,29 +119,29 @@
                         <div class="rounded-xl bg-slate-50 p-4 space-y-2 text-sm">
                             <div class="flex justify-between text-slate-600">
                                 <span>{{ __('Price per kg') }}</span>
-                                <span>Rs. {{ number_format($vegetable->price, 2) }}</span>
+                                <span>{{ __('Rs.') }} {{ format_price($vegetable->price) }}</span>
                             </div>
                             <div class="flex justify-between text-slate-600">
-                                <span>Quantity</span>
+                                <span>{{ __('Quantity') }}</span>
                                 <span id="displayQty">1.00 kg</span>
                             </div>
                             <div class="flex justify-between pt-2 border-t border-slate-200 text-base">
-                                <span class="font-semibold text-slate-900">Total</span>
-                                <span class="font-bold text-market-600 text-2xl" id="totalPrice">Rs. {{ number_format($vegetable->price, 2) }}</span>
+                                <span class="font-semibold text-slate-900">{{ __('Total') }}</span>
+                                <span class="font-bold text-market-600 text-2xl" id="totalPrice">{{ __('Rs.') }} {{ format_price($vegetable->price) }}</span>
                             </div>
                         </div>
 
                         <button type="submit" class="w-full rounded-full veg-gradient py-3.5 text-white font-medium hover:opacity-90 transition flex items-center justify-center gap-2 text-base">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-                            Add to Cart
+                            {{ __('Add to Cart') }}
                         </button>
                     </form>
                 @endif
 
                 <div class="mt-5 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-500">
-                    <div class="flex items-center gap-2">✅ Fresh & organic produce</div>
-                    <div class="flex items-center gap-2">🚚 Free delivery on orders over Rs. 500</div>
-                    <div class="flex items-center gap-2">💳 Pay with eSewa or Khalti</div>
+                    <div class="flex items-center gap-2">✅ {{ __('Fresh & organic produce') }}</div>
+                    <div class="flex items-center gap-2">🚚 {{ __('Free delivery on orders over Rs. 500') }}</div>
+                    <div class="flex items-center gap-2">💳 {{ __('Pay with eSewa or Khalti') }}</div>
                 </div>
             </div>
         </div>

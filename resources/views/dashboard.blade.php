@@ -74,11 +74,11 @@
                     <div class="w-10 h-10 rounded-xl veg-gradient flex items-center justify-center text-white">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
-                    <h2 class="text-lg font-semibold">Marketplace Settings</h2>
+                    <h2 class="text-lg font-semibold">{{ __('Marketplace Settings') }}</h2>
                 </div>
-                <p class="text-slate-600 mb-5">Manage the marketplace name, description, and overall configuration.</p>
+                <p class="text-slate-600 mb-5">{{ __('Manage the marketplace name, description, and overall configuration.') }}</p>
                 <a href="{{ route('admin.settings') }}" class="inline-flex items-center gap-2 rounded-full veg-gradient px-5 py-2.5 text-white font-medium hover:opacity-90 transition">
-                    Open Settings
+                    {{ __('Open Settings') }}
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </a>
             </div>
@@ -88,12 +88,12 @@
                     <div class="w-10 h-10 rounded-xl warm-gradient flex items-center justify-center text-white">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     </div>
-                    <h2 class="text-lg font-semibold">Platform Overview</h2>
+                    <h2 class="text-lg font-semibold">{{ __('Platform Overview') }}</h2>
                 </div>
-                <p class="text-slate-600 mb-5">You have <strong>{{ $totalUsers }}</strong> users and <strong>{{ $totalVeggies }}</strong> vegetable listings across the platform.</p>
+                <p class="text-slate-600 mb-5">{{ __('You have') }} <strong>{{ $totalUsers }}</strong> {{ __('users and') }} <strong>{{ $totalVeggies }}</strong> {{ __('vegetable listings across the platform.') }}</p>
                 <div class="flex gap-3 text-sm">
-                    <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium">{{ $totalUsers }} Users</span>
-                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 font-medium">{{ $totalVeggies }} Listings</span>
+                    <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium">{{ $totalUsers }} {{ __('Users') }}</span>
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 font-medium">{{ $totalVeggies }} {{ __('Listings') }}</span>
                 </div>
             </div>
         </div>
@@ -130,18 +130,18 @@
                             {{ __($product->condition) }}
                         </span>
                         <div class="flex items-center justify-between mt-3">
-                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($product->price, 2) }} <span class="text-sm font-normal text-slate-400">/ kg</span></span>
-                            <span class="text-sm text-slate-500">{{ $product->available_quantity }} kg in stock</span>
+                            <span class="text-market-600 font-bold text-xl">{{ __('Rs.') }} {{ format_price($product->price) }} <span class="text-sm font-normal text-slate-400">{{ __('/ kg') }}</span></span>
+                            <span class="text-sm text-slate-500">{{ $product->available_quantity }} {{ __('kg') }} {{ __('in stock') }}</span>
                         </div>
                     </div>
                 </div>
             @empty
                 <div class="col-span-full rounded-2xl border-2 border-dashed border-green-200 p-10 text-center">
                     <div class="text-6xl mb-4">🌱</div>
-                    <h3 class="text-lg font-semibold text-slate-700 mb-2">No products yet</h3>
-                    <p class="text-slate-500 mb-5">Start adding your fresh vegetables to the marketplace.</p>
+                    <h3 class="text-lg font-semibold text-slate-700 mb-2">{{ __('No products yet') }}</h3>
+                    <p class="text-slate-500 mb-5">{{ __('Start adding your fresh vegetables to the marketplace.') }}</p>
                     <a href="{{ route('vendor.products') }}" class="inline-flex items-center gap-2 rounded-full veg-gradient px-6 py-3 text-white font-medium hover:opacity-90 transition">
-                        Add Your First Product
+                        {{ __('Add Your First Product') }}
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     </a>
                 </div>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="p-5">
                         <h3 class="font-semibold text-lg">{{ $veg->localized_name }}</h3>
-                        <p class="text-slate-500 text-sm mb-1">by {{ $veg->vendor->name }}</p>
+                        <p class="text-slate-500 text-sm mb-1">{{ __('by') }} {{ $veg->vendor->name }}</p>
                         <span class="inline-block mb-2 text-xs px-2 py-0.5 rounded-full font-medium
                             {{ $veg->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
                             {{ $veg->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
@@ -193,16 +193,16 @@
                             {{ __($veg->condition) }}
                         </span>
                         <div class="flex items-center justify-between mt-1">
-                            <span class="text-market-600 font-bold text-xl">Rs. {{ number_format($veg->price, 2) }} <span class="text-sm font-normal text-slate-400">/ kg</span></span>
-                            <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ $veg->available_quantity }} kg left</span>
+                            <span class="text-market-600 font-bold text-xl">{{ __('Rs.') }} {{ format_price($veg->price) }} <span class="text-sm font-normal text-slate-400">{{ __('/ kg') }}</span></span>
+                            <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ $veg->available_quantity }} {{ __('kg') }} {{ __('in stock') }}</span>
                         </div>
                     </div>
                 </a>
             @empty
                 <div class="col-span-full rounded-2xl border-2 border-dashed border-green-200 p-10 text-center">
                     <div class="text-6xl mb-4">🛒</div>
-                    <h3 class="text-lg font-semibold text-slate-700 mb-2">Nothing available yet</h3>
-                    <p class="text-slate-500">Come back later to see fresh listings.</p>
+                    <h3 class="text-lg font-semibold text-slate-700 mb-2">{{ __('Nothing available yet') }}</h3>
+                    <p class="text-slate-500">{{ __('Come back later to see fresh listings.') }}</p>
                 </div>
             @endforelse
         </div>

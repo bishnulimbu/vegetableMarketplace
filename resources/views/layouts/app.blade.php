@@ -107,7 +107,7 @@
 
     <footer class="border-t border-green-100 bg-white/50 mt-12">
         <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-slate-500">
-            &copy; {{ date('Y') }} Digital KrishiBazaar. Empowering farmers, eliminating middlemen.
+            &copy; {{ date('Y') }} Digital KrishiBazaar. {{ __('Empowering farmers, eliminating middlemen.') }}
         </div>
     </footer>
 </body>

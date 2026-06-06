@@ -70,9 +70,9 @@
                             {{ $vegetable->vendor->name }}
                         </p>
                         <div class="flex items-center justify-between mt-4 pt-4 border-t border-green-50">
-                            <span class="text-market-600 font-bold text-2xl">Rs. {{ number_format($vegetable->price, 2) }} <span class="text-sm font-normal text-slate-400">/ kg</span></span>
+                            <span class="text-market-600 font-bold text-2xl">{{ __('Rs.') }} {{ format_price($vegetable->price) }} <span class="text-sm font-normal text-slate-400">{{ __('/ kg') }}</span></span>
                             <span class="text-sm {{ $vegetable->available_quantity > 5 ? 'text-green-600' : 'text-rose-500' }}">
-                                {{ $vegetable->available_quantity > 5 ? '✓' : '⚠' }} {{ $vegetable->available_quantity }} kg in stock
+                                {{ $vegetable->available_quantity > 5 ? '✓' : '⚠' }} {{ format_price($vegetable->available_quantity) }} {{ __('kg') }} {{ __('in stock') }}
                             </span>
                         </div>
                     </div>

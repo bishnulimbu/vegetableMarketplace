@@ -4,8 +4,8 @@
     <div class="grid gap-8 lg:grid-cols-[1fr_420px]">
         {{-- Cart Items --}}
         <div>
-            <h1 class="text-3xl font-bold text-slate-900 mb-2">Checkout</h1>
-            <p class="text-slate-500 mb-6">Review your order and choose a payment method.</p>
+            <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ __('Checkout') }}</h1>
+            <p class="text-slate-500 mb-6">{{ __('Review your order and choose a payment method.') }}</p>
 
             <div class="space-y-3 mb-8">
                 @foreach($cartItems as $item)
@@ -19,9 +19,9 @@
                         </div>
                         <div class="flex-1">
                             <p class="font-medium text-slate-900">{{ $item->vegetable->localized_name }}</p>
-                            <p class="text-sm text-slate-500">Qty: {{ $item->quantity }} kg × Rs. {{ number_format($item->vegetable->price, 2) }}</p>
+                            <p class="text-sm text-slate-500">{{ __('Qty') }}: {{ $item->quantity }} {{ __('kg') }} × {{ __('Rs.') }} {{ format_price($item->vegetable->price) }}</p>
                         </div>
-                        <p class="font-bold text-market-600">Rs. {{ number_format($item->vegetable->price * $item->quantity, 2) }}</p>
+                        <p class="font-bold text-market-600">{{ __('Rs.') }} {{ format_price($item->vegetable->price * $item->quantity) }}</p>
                     </div>
                 @endforeach
             </div>
@@ -30,8 +30,8 @@
         {{-- Payment Section --}}
         <div>
             <div class="sticky top-24 rounded-2xl bg-white border border-green-100 p-6">
-                <h2 class="text-lg font-semibold mb-2">Payment Method</h2>
-                <p class="text-sm text-slate-500 mb-5">Select a demo payment gateway to complete your order.</p>
+                <h2 class="text-lg font-semibold mb-2">{{ __('Payment Method') }}</h2>
+                <p class="text-sm text-slate-500 mb-5">{{ __('Select a demo payment gateway to complete your order.') }}</p>
 
                 <form action="{{ route('order.place') }}" method="POST" id="paymentForm">
                     @csrf
@@ -92,13 +92,13 @@
 
                             <div class="flex justify-between items-center mb-4 pb-3 border-b">
                                 <span class="font-medium">Total Amount</span>
-                                <span class="font-bold text-lg text-market-600">Rs. {{ number_format($total, 2) }}</span>
+                                <span class="font-bold text-lg text-market-600">{{ __('Rs.') }} {{ format_price($total) }}</span>
                             </div>
 
                             <button type="submit" class="w-full rounded-full bg-green-600 py-3 text-white font-medium hover:bg-green-700 transition">
-                                Pay Rs. {{ number_format($total, 2) }}
+                                {{ __('Pay') }} {{ __('Rs.') }} {{ format_price($total) }}
                             </button>
-                            <button type="button" onclick="closeModal('esewaModal')" class="w-full mt-2 text-sm text-slate-500 hover:text-slate-700 py-2">Cancel</button>
+                            <button type="button" onclick="closeModal('esewaModal')" class="w-full mt-2 text-sm text-slate-500 hover:text-slate-700 py-2">{{ __('Cancel') }}</button>
                         </div>
                     </div>
 
@@ -127,26 +127,26 @@
                             </div>
 
                             <div class="flex justify-between items-center mb-4 pb-3 border-b">
-                                <span class="font-medium">Total Amount</span>
-                                <span class="font-bold text-lg text-market-600">Rs. {{ number_format($total, 2) }}</span>
+                                <span class="font-medium">{{ __('Total Amount') }}</span>
+                                <span class="font-bold text-lg text-market-600">{{ __('Rs.') }} {{ format_price($total) }}</span>
                             </div>
 
                             <button type="submit" class="w-full rounded-full bg-purple-700 py-3 text-white font-medium hover:bg-purple-800 transition">
-                                Pay Rs. {{ number_format($total, 2) }}
+                                {{ __('Pay') }} {{ __('Rs.') }} {{ format_price($total) }}
                             </button>
-                            <button type="button" onclick="closeModal('khaltiModal')" class="w-full mt-2 text-sm text-slate-500 hover:text-slate-700 py-2">Cancel</button>
+                            <button type="button" onclick="closeModal('khaltiModal')" class="w-full mt-2 text-sm text-slate-500 hover:text-slate-700 py-2">{{ __('Cancel') }}</button>
                         </div>
                     </div>
                 </form>
 
                 <div class="rounded-xl bg-slate-50 p-4 text-sm">
                     <div class="flex justify-between mb-2">
-                        <span class="text-slate-600">Subtotal</span>
-                        <span class="font-medium">Rs. {{ number_format($total, 2) }}</span>
+                        <span class="text-slate-600">{{ __('Subtotal') }}</span>
+                        <span class="font-medium">{{ __('Rs.') }} {{ format_price($total) }}</span>
                     </div>
                     <div class="flex justify-between pt-2 border-t border-slate-200">
-                        <span class="font-semibold">Total</span>
-                        <span class="font-bold text-market-600 text-lg">Rs. {{ number_format($total, 2) }}</span>
+                        <span class="font-semibold">{{ __('Total') }}</span>
+                        <span class="font-bold text-market-600 text-lg">{{ __('Rs.') }} {{ format_price($total) }}</span>
                     </div>
                 </div>
             </div>

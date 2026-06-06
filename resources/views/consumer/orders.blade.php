@@ -3,18 +3,18 @@
 @section('content')
     <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-slate-900">My Orders</h1>
-            <p class="text-slate-500 mt-1">Track all your purchases.</p>
+            <h1 class="text-3xl font-bold text-slate-900">{{ __('My Orders') }}</h1>
+            <p class="text-slate-500 mt-1">{{ __('Track all your purchases.') }}</p>
         </div>
-        <a href="{{ route('consumer.market') }}" class="text-sm text-market-600 hover:text-market-700 font-medium">← Browse market</a>
+        <a href="{{ route('consumer.market') }}" class="text-sm text-market-600 hover:text-market-700 font-medium">← {{ __('Browse Market') }}</a>
     </div>
 
     @if($orders->isEmpty())
         <div class="rounded-2xl border-2 border-dashed border-green-200 p-16 text-center">
             <div class="text-7xl mb-4">📦</div>
-            <h2 class="text-xl font-semibold text-slate-700 mb-2">No orders yet</h2>
-            <p class="text-slate-500 mb-5">Start shopping at the market.</p>
-            <a href="{{ route('consumer.market') }}" class="inline-flex items-center gap-2 rounded-full veg-gradient px-6 py-3 text-white font-medium">Browse Market</a>
+            <h2 class="text-xl font-semibold text-slate-700 mb-2">{{ __('No orders yet') }}</h2>
+            <p class="text-slate-500 mb-5">{{ __('Start shopping at the market.') }}</p>
+            <a href="{{ route('consumer.market') }}" class="inline-flex items-center gap-2 rounded-full veg-gradient px-6 py-3 text-white font-medium">{{ __('Browse Market') }}</a>
         </div>
     @else
         <div class="space-y-5">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 capitalize">{{ $order->status }}</span>
-                            <span class="font-bold text-market-600">Rs. {{ number_format($order->total_amount, 2) }}</span>
+                            <span class="font-bold text-market-600">{{ __('Rs.') }} {{ format_price($order->total_amount) }}</span>
                         </div>
                     </div>
 
@@ -41,7 +41,7 @@
                                         🥬
                                     @endif
                                 </span>
-                                <span>{{ $item->vegetable->localized_name }} × {{ $item->quantity }} kg</span>
+                                <span>{{ $item->vegetable->localized_name }} × {{ $item->quantity }} {{ __('kg') }}</span>
                             </div>
                         @endforeach
                     </div>
