@@ -21,48 +21,104 @@
     @php
         use App\Models\User;
         use App\Models\Vegetable;
+        use App\Models\OrderItem;
         $totalUsers = User::count();
         $totalVeggies = Vegetable::count();
         $myProducts = $user->role === 'vendor' ? $user->vegetables()->count() : 0;
     @endphp
 
-    <div class="grid gap-5 {{ $user->isConsumer() ? 'md:grid-cols-1' : 'md:grid-cols-3' }} mb-8">
-        @if(!$user->isConsumer())
-        <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-sm">{{ __('Total Users') }}</p>
-                    <p class="text-2xl font-bold text-slate-900">{{ $totalUsers }}</p>
-                </div>
-            </div>
-        </div>
-        @endif
-        <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-sm">{{ $user->isAdmin() ? __('Total Listings') : ($user->isVendor() ? __('My Products') : __('Available Items')) }}</p>
-                    <p class="text-2xl font-bold text-slate-900">{{ $user->isVendor() ? $myProducts : $totalVeggies }}</p>
-                </div>
-            </div>
-        </div>
-        @if(!$user->isConsumer())
-        <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-sm">{{ __('Role') }}</p>
-                    <p class="text-2xl font-bold text-slate-900 capitalize">{{ $user->role }}</p>
+    <div class="grid gap-5 {{ $user->isConsumer() ? 'md:grid-cols-1' : ($user->isVendor() ? 'md:grid-cols-4' : 'md:grid-cols-3') }} mb-8">
+        @if($user->isVendor())
+            {{-- Vendor: Products Sold --}}
+            @php
+                $vendorProductIds = $user->vegetables()->pluck('id');
+                $productsSold = OrderItem::whereIn('vegetable_id', $vendorProductIds)->sum('quantity');
+                $totalOrders = OrderItem::whereIn('vegetable_id', $vendorProductIds)
+                    ->distinct('order_id')
+                    ->count('order_id');
+                $totalEarnings = OrderItem::whereIn('vegetable_id', $vendorProductIds)
+                    ->selectRaw('SUM(quantity * price) as total')
+                    ->value('total') ?? 0;
+            @endphp
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('Products Sold') }}</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ $productsSold }} <span class="text-sm font-normal text-slate-400">{{ __('kg') }}</span></p>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('Total Orders') }}</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ $totalOrders }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('Earnings') }}</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ __('Rs.') }} {{ format_price($totalEarnings) }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('My Products') }}</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ $myProducts }}</p>
+                    </div>
+                </div>
+            </div>
+        @elseif(!$user->isConsumer())
+            {{-- Admin stats --}}
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('Total Users') }}</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ $totalUsers }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('Total Listings') }}</p>
+                        <p class="text-2xl font-bold text-slate-900">{{ $totalVeggies }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-2xl bg-white p-6 border border-green-100 card-hover">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">{{ __('Role') }}</p>
+                        <p class="text-2xl font-bold text-slate-900 capitalize">{{ $user->role }}</p>
+                    </div>
+                </div>
+            </div>
         @endif
     </div>
 
