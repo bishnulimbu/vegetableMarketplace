@@ -240,24 +240,23 @@
         @endphp
 
         {{-- Location notice --}}
-        @if($user->city)
-            <div class="mb-6 flex items-center gap-3 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-800">
+        <div id="dashboardLocationBanner" class="mb-6 {{ $useBrowserLocation ? '' : 'hidden' }}">
+            <div class="flex items-center gap-3 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-800">
                 <svg class="w-5 h-5 shrink-0 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                <span>{{ __('Showing products near') }} <strong>{{ $user->city }}</strong></span>
-                @if($nearbyCities->isNotEmpty())
-                    <span class="ml-auto text-xs text-sky-600">{{ __('Also available in') }} {{ $nearbyCities->reject(fn($c) => $c === $user->city)->take(3)->implode(', ') }}</span>
-                @endif
+                <span class="flex-1 text-sm">{{ __('Showing products near your current location') }}</span>
+                <button id="refreshLocation" class="shrink-0 text-xs text-sky-600 hover:text-sky-800 font-medium underline">{{ __('Update') }}</button>
+                <button id="clearLocation" class="shrink-0 text-xs text-rose-500 hover:text-rose-700 font-medium">{{ __('Clear') }}</button>
             </div>
-        @else
-            <div id="dashboardLocationPrompt" class="mb-6">
-                <div class="flex items-center gap-3 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-800">
-                    <svg class="w-5 h-5 shrink-0 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    <span class="flex-1 text-sm">{{ __('Find products near you') }} — <strong>{{ __('Share your location') }}</strong> {{ __('to see nearby vendors first.') }}</span>
-                    <button id="dashboardAllowLocation" class="shrink-0 rounded-full bg-sky-600 px-5 py-2 text-white text-sm font-medium hover:bg-sky-700 transition">{{ __('Allow') }}</button>
-                    <button id="dashboardDismissLocation" class="shrink-0 text-sky-500 hover:text-sky-700 text-sm font-medium transition">{{ __('Skip') }}</button>
-                </div>
+        </div>
+
+        <div id="dashboardLocationPrompt" class="mb-6 {{ $useBrowserLocation ? 'hidden' : '' }}">
+            <div class="flex items-center gap-3 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-800">
+                <svg class="w-5 h-5 shrink-0 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="flex-1 text-sm">{{ __('Find products near you') }} — <strong>{{ __('Share your location') }}</strong> {{ __('to see nearby vendors first.') }}</span>
+                <button id="dashboardAllowLocation" class="shrink-0 rounded-full bg-sky-600 px-5 py-2 text-white text-sm font-medium hover:bg-sky-700 transition">{{ __('Allow') }}</button>
+                <button id="dashboardDismissLocation" class="shrink-0 text-sky-500 hover:text-sky-700 text-sm font-medium transition">{{ __('Skip') }}</button>
             </div>
-        @endif
+        </div>
 
         @foreach($grouped as $category => $items)
             <div class="mb-10">
@@ -300,10 +299,14 @@
                             <div class="p-4">
                                 <h2 class="font-semibold text-base text-slate-900 hover:text-market-600 transition truncate">{{ $vegetable->localized_name }}</h2>
                                 <p class="text-slate-500 text-xs flex items-center gap-1 mt-1">
-                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                    {{ $vegetable->vendor->name }}
-                                    @if($vegetable->vendor->city)
-                                        <span class="ml-auto inline-flex items-center gap-0.5">
+                                    <svg class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    <span class="truncate">{{ $vegetable->vendor->name }}</span>
+                                    @if(isset($vegetable->distance))
+                                        <span class="ml-auto shrink-0 text-xs font-medium {{ $vegetable->distance <= 10 ? 'text-green-600' : 'text-slate-400' }}">
+                                            ~{{ $vegetable->distance }} km
+                                        </span>
+                                    @elseif($vegetable->vendor->city)
+                                        <span class="ml-auto shrink-0 inline-flex items-center gap-0.5">
                                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                             {{ $vegetable->vendor->city }}
                                         </span>
@@ -348,17 +351,27 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const prompt = document.getElementById('dashboardLocationPrompt');
+    const banner = document.getElementById('dashboardLocationBanner');
     const allowBtn = document.getElementById('dashboardAllowLocation');
     const dismissBtn = document.getElementById('dashboardDismissLocation');
+    const refreshBtn = document.getElementById('refreshLocation');
+    const clearBtn = document.getElementById('clearLocation');
 
-    if (!prompt) return;
+    // Reload page with browser coordinates
+    function goWithLocation(lat, lng) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('near_lat', lat);
+        url.searchParams.set('near_lng', lng);
+        window.location.href = url.toString();
+    }
 
-    // Check if previously dismissed
-    try {
-        if (localStorage.getItem('dash_location_dismissed')) {
-            prompt.classList.add('hidden');
-        }
-    } catch(e) {}
+    // Reload page without location params
+    function clearLocation() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('near_lat');
+        url.searchParams.delete('near_lng');
+        window.location.href = url.toString();
+    }
 
     function requestLocation() {
         if (!navigator.geolocation) {
@@ -366,22 +379,43 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         navigator.geolocation.getCurrentPosition(function (pos) {
-            // Redirect to market page with coordinates pre-filled for proximity
-            window.location.href = '{{ route("consumer.market") }}?near_lat=' + pos.coords.latitude + '&near_lng=' + pos.coords.longitude + '&radius=25';
+            goWithLocation(pos.coords.latitude, pos.coords.longitude);
         }, function () {
             alert('{{ __('Please enable location access to find nearby products.') }}');
             prompt.classList.add('hidden');
         });
     }
 
-    allowBtn.addEventListener('click', function () {
-        requestLocation();
-    });
+    // Only show prompt if not already using browser location
+    @if(!$useBrowserLocation)
+        // Check if previously dismissed
+        let dismissed = false;
+        try { dismissed = localStorage.getItem('dash_location_dismissed'); } catch(e) {}
+        if (dismissed) {
+            prompt.classList.add('hidden');
+        }
 
-    dismissBtn.addEventListener('click', function () {
-        prompt.classList.add('hidden');
-        try { localStorage.setItem('dash_location_dismissed', '1'); } catch(e) {}
-    });
+        allowBtn.addEventListener('click', function () {
+            requestLocation();
+        });
+
+        dismissBtn.addEventListener('click', function () {
+            prompt.classList.add('hidden');
+            try { localStorage.setItem('dash_location_dismissed', '1'); } catch(e) {}
+        });
+    @endif
+
+    // Refresh / Clear buttons when using browser location
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () {
+            requestLocation();
+        });
+    }
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            clearLocation();
+        });
+    }
 });
 </script>
 @endsection

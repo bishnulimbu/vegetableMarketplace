@@ -146,6 +146,8 @@
     "Showing": "देखाउँदै",
     "Reset view": "दृश्य रिसेट गर्नुहोस्",
     "Show products": "उत्पादनहरू देखाउनुहोस्",
+    "Showing products near your current location": "तपाईंको हालको स्थान नजिकको उत्पादनहरू देखाउँदै",
+    "Update": "अद्यावधिक गर्नुहोस्",
     "Geolocation is not supported by your browser.": "तपाईंको ब्राउजरले स्थान पहिचान समर्थन गर्दैन।",
     "Unknown location": "अज्ञात स्थान",
     "Vendor Location": "विक्रेताको स्थान",
