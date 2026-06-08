@@ -32,18 +32,39 @@
                                 @endif
                             </div>
                             <div class="p-5">
-                                <h2 class="font-semibold text-lg">{{ $vegetable->localized_name }}</h2>
-                                <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium
-                                    {{ $vegetable->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
-                                    {{ $vegetable->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
-                                    {{ $vegetable->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
-                                    {{ $vegetable->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
-                                    {{ $vegetable->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
-                                    {{ __($vegetable->condition) }}
-                                </span>
+                                <div class="flex items-start justify-between gap-2">
+                                    <h2 class="font-semibold text-lg">{{ $vegetable->localized_name }}</h2>
+                                    <span class="shrink-0 inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium
+                                        {{ $vegetable->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
+                                        {{ $vegetable->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
+                                        {{ $vegetable->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
+                                        {{ $vegetable->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
+                                        {{ $vegetable->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
+                                        {{ __($vegetable->condition) }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-indigo-100 text-indigo-700">{{ __($vegetable->category) }}</span>
+                                </div>
                                 <div class="flex items-center justify-between mt-3">
                                     <span class="text-market-600 font-bold text-xl">{{ __('Rs.') }} {{ format_price($vegetable->price) }} <span class="text-sm font-normal text-slate-400">{{ __('/ kg') }}</span></span>
                                     <span class="text-sm text-slate-500">{{ $vegetable->available_quantity }} {{ __('kg') }} {{ __('in stock') }}</span>
+                                </div>
+
+                                {{-- Action buttons --}}
+                                <div class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100">
+                                    <a href="{{ route('vendor.product.edit', $vegetable) }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-market-600 hover:text-market-700 transition">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        {{ __('Edit') }}
+                                    </a>
+                                    <button type="button" onclick="confirmDelete({{ $vegetable->id }}, '{{ $vegetable->localized_name }}')" class="inline-flex items-center gap-1.5 text-sm font-medium text-rose-500 hover:text-rose-600 transition">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        {{ __('Delete') }}
+                                    </button>
+                                    <form id="delete-form-{{ $vegetable->id }}" action="{{ route('vendor.product.destroy', $vegetable) }}" method="POST" class="hidden">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -86,6 +107,18 @@
                     </select>
                 </label>
                 <label class="block text-sm font-medium text-slate-700">
+                    <span>{{ __('Category') }} <span class="text-rose-500">*</span></span>
+                    <select name="category" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition bg-white">
+                        <option value="" disabled selected>{{ __('Select category') }}</option>
+                        <option value="Vegetables">{{ __('Vegetables') }}</option>
+                        <option value="Fruits">{{ __('Fruits') }}</option>
+                        <option value="Leafy Greens">{{ __('Leafy Greens') }}</option>
+                        <option value="Herbs">{{ __('Herbs') }}</option>
+                        <option value="Exotic">{{ __('Exotic') }}</option>
+                        <option value="Others">{{ __('Others') }}</option>
+                    </select>
+                </label>
+                <label class="block text-sm font-medium text-slate-700">
                     <span>{{ __('Price') }} ({{ __('Rs.') }})</span>
                     <input name="price" type="number" step="0.01" required class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-3 focus:border-market-400 focus:ring-2 focus:ring-market-100 outline-none transition" />
                 </label>
@@ -97,4 +130,14 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    function confirmDelete(id, name) {
+        if (confirm(`{{ __('Are you sure you want to delete') }} "${name}"?`)) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    }
+</script>
 @endsection

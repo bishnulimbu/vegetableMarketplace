@@ -110,5 +110,7 @@
             &copy; {{ date('Y') }} Digital KrishiBazaar. {{ __('Empowering farmers, eliminating middlemen.') }}
         </div>
     </footer>
+
+    @yield('scripts')
 </body>
 </html>

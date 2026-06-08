@@ -35,6 +35,9 @@ Route::middleware('auth')->group(function () {
     // Vendor
     Route::get('vendor/products', [MarketplaceController::class, 'vendorProducts'])->name('vendor.products');
     Route::post('vendor/products', [MarketplaceController::class, 'storeVendorProduct'])->name('vendor.products.store');
+    Route::get('vendor/product/{vegetable}/edit', [MarketplaceController::class, 'editVendorProduct'])->name('vendor.product.edit');
+    Route::put('vendor/product/{vegetable}', [MarketplaceController::class, 'updateVendorProduct'])->name('vendor.product.update');
+    Route::delete('vendor/product/{vegetable}', [MarketplaceController::class, 'destroyVendorProduct'])->name('vendor.product.destroy');
 
     // Consumer — Market & Product
     Route::get('consumer/market', [MarketplaceController::class, 'consumerMarket'])->name('consumer.market');

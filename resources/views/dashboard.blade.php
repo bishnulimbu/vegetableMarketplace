@@ -177,14 +177,17 @@
                     </div>
                     <div class="p-5">
                         <h3 class="font-semibold text-lg">{{ $product->localized_name }}</h3>
-                        <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium
-                            {{ $product->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
-                            {{ $product->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
-                            {{ $product->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
-                            {{ $product->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
-                            {{ $product->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
-                            {{ __($product->condition) }}
-                        </span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="inline-block text-xs px-2 py-0.5 rounded-full font-medium
+                                {{ $product->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
+                                {{ $product->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
+                                {{ $product->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
+                                {{ $product->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
+                                {{ $product->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
+                                {{ __($product->condition) }}
+                            </span>
+                            <span class="inline-block text-xs px-2 py-0.5 rounded-full font-medium bg-indigo-100 text-indigo-700">{{ __($product->category) }}</span>
+                        </div>
                         <div class="flex items-center justify-between mt-3">
                             <span class="text-market-600 font-bold text-xl">{{ __('Rs.') }} {{ format_price($product->price) }} <span class="text-sm font-normal text-slate-400">{{ __('/ kg') }}</span></span>
                             <span class="text-sm text-slate-500">{{ $product->available_quantity }} {{ __('kg') }} {{ __('in stock') }}</span>
@@ -217,51 +220,116 @@
 
     @else
         {{-- Consumer Dashboard --}}
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-            <div class="col-span-full">
-                <h2 class="text-2xl font-bold text-slate-900 mb-2">{{ __('Fresh Picks') }}</h2>
-                <p class="text-slate-500 mb-6">{{ __("Check out what's available in the marketplace right now.") }}</p>
+        @php
+            $categoryIcons = [
+                'Vegetables' => '🥦',
+                'Fruits' => '🍎',
+                'Leafy Greens' => '🥬',
+                'Herbs' => '🌿',
+                'Exotic' => '🥭',
+                'Others' => '🌱',
+            ];
+            $categoryColors = [
+                'Vegetables' => 'from-green-100 to-emerald-100',
+                'Fruits' => 'from-rose-100 to-orange-100',
+                'Leafy Greens' => 'from-lime-100 to-green-100',
+                'Herbs' => 'from-purple-100 to-violet-100',
+                'Exotic' => 'from-amber-100 to-yellow-100',
+                'Others' => 'from-sky-100 to-blue-100',
+            ];
+        @endphp
+
+        {{-- Location notice --}}
+        @if($user->city)
+            <div class="mb-6 flex items-center gap-3 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-800">
+                <svg class="w-5 h-5 shrink-0 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>{{ __('Showing products near') }} <strong>{{ $user->city }}</strong></span>
+                @if($nearbyCities->isNotEmpty())
+                    <span class="ml-auto text-xs text-sky-600">{{ __('Also available in') }} {{ $nearbyCities->reject(fn($c) => $c === $user->city)->take(3)->implode(', ') }}</span>
+                @endif
             </div>
-
-            @php $latestVeggies = App\Models\Vegetable::with('vendor')->where('available_quantity', '>', 0)->latest()->take(3)->get(); @endphp
-
-            @forelse($latestVeggies as $veg)
-                <a href="{{ route('product.view', $veg) }}" class="rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
-                    <div class="relative h-44 bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-6xl">
-                        @if($veg->first_image)
-                            <img src="{{ $veg->first_image }}" alt="{{ $veg->name }}" class="w-full h-full object-cover">
-                        @else
-                            🥕
-                        @endif
-                        @if(count($veg->all_images) > 1)
-                            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">+{{ count($veg->all_images) - 1 }}</span>
-                        @endif
-                    </div>
-                    <div class="p-5">
-                        <h3 class="font-semibold text-lg">{{ $veg->localized_name }}</h3>
-                        <p class="text-slate-500 text-sm mb-1">{{ __('by') }} {{ $veg->vendor->name }}</p>
-                        <span class="inline-block mb-2 text-xs px-2 py-0.5 rounded-full font-medium
-                            {{ $veg->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
-                            {{ $veg->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
-                            {{ $veg->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
-                            {{ $veg->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
-                            {{ $veg->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
-                            {{ __($veg->condition) }}
-                        </span>
-                        <div class="flex items-center justify-between mt-1">
-                            <span class="text-market-600 font-bold text-xl">{{ __('Rs.') }} {{ format_price($veg->price) }} <span class="text-sm font-normal text-slate-400">{{ __('/ kg') }}</span></span>
-                            <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ $veg->available_quantity }} {{ __('kg') }} {{ __('in stock') }}</span>
-                        </div>
-                    </div>
-                </a>
-            @empty
-                <div class="col-span-full rounded-2xl border-2 border-dashed border-green-200 p-10 text-center">
-                    <div class="text-6xl mb-4">🛒</div>
-                    <h3 class="text-lg font-semibold text-slate-700 mb-2">{{ __('Nothing available yet') }}</h3>
-                    <p class="text-slate-500">{{ __('Come back later to see fresh listings.') }}</p>
+        @else
+            <div id="dashboardLocationPrompt" class="mb-6">
+                <div class="flex items-center gap-3 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-800">
+                    <svg class="w-5 h-5 shrink-0 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <span class="flex-1 text-sm">{{ __('Find products near you') }} — <strong>{{ __('Share your location') }}</strong> {{ __('to see nearby vendors first.') }}</span>
+                    <button id="dashboardAllowLocation" class="shrink-0 rounded-full bg-sky-600 px-5 py-2 text-white text-sm font-medium hover:bg-sky-700 transition">{{ __('Allow') }}</button>
+                    <button id="dashboardDismissLocation" class="shrink-0 text-sky-500 hover:text-sky-700 text-sm font-medium transition">{{ __('Skip') }}</button>
                 </div>
-            @endforelse
-        </div>
+            </div>
+        @endif
+
+        @foreach($grouped as $category => $items)
+            <div class="mb-10">
+                {{-- Section header --}}
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">{{ $categoryIcons[$category] ?? '🌱' }}</span>
+                        <h2 class="text-2xl font-bold text-slate-900">{{ __($category) }}</h2>
+                        <span class="text-sm bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-medium">{{ $items->count() }} {{ __('items') }}</span>
+                    </div>
+                    <a href="{{ route('consumer.market', ['category' => $category]) }}" class="text-sm font-medium text-market-600 hover:text-market-700 transition">
+                        {{ __('View All') }} &rarr;
+                    </a>
+                </div>
+
+                {{-- Horizontal scrolling row, limit 5 items --}}
+                @php $displayItems = $items->take(5); @endphp
+                <div class="flex gap-5 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-thin">
+                    @foreach($displayItems as $vegetable)
+                        <a href="{{ route('product.view', $vegetable) }}" class="block shrink-0 w-64 snap-start rounded-2xl bg-white border border-green-100 overflow-hidden card-hover">
+                            <div class="relative h-40 bg-gradient-to-br {{ $categoryColors[$category] ?? 'from-green-100 to-emerald-100' }} flex items-center justify-center text-5xl">
+                                @if($vegetable->first_image)
+                                    <img src="{{ $vegetable->first_image }}" alt="{{ $vegetable->name }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ $categoryIcons[$category] ?? '🥦' }}
+                                @endif
+                                @if(count($vegetable->all_images) > 1)
+                                    <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">+{{ count($vegetable->all_images) - 1 }}</span>
+                                @endif
+                                {{-- Condition badge --}}
+                                <span class="absolute top-3 left-3 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm
+                                    {{ $vegetable->condition === 'Organic' ? 'bg-green-100 text-green-700' : '' }}
+                                    {{ $vegetable->condition === 'Premium' ? 'bg-amber-100 text-amber-700' : '' }}
+                                    {{ $vegetable->condition === 'Fresh' ? 'bg-sky-100 text-sky-700' : '' }}
+                                    {{ $vegetable->condition === 'Daily Harvest' ? 'bg-purple-100 text-purple-700' : '' }}
+                                    {{ $vegetable->condition === 'Farm Fresh' ? 'bg-orange-100 text-orange-700' : '' }}">
+                                    {{ __($vegetable->condition) }}
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <h2 class="font-semibold text-base text-slate-900 hover:text-market-600 transition truncate">{{ $vegetable->localized_name }}</h2>
+                                <p class="text-slate-500 text-xs flex items-center gap-1 mt-1">
+                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    {{ $vegetable->vendor->name }}
+                                    @if($vegetable->vendor->city)
+                                        <span class="ml-auto inline-flex items-center gap-0.5">
+                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            {{ $vegetable->vendor->city }}
+                                        </span>
+                                    @endif
+                                </p>
+                                <div class="flex items-center justify-between mt-3 pt-3 border-t border-green-50">
+                                    <span class="text-market-600 font-bold text-lg">{{ __('Rs.') }} {{ format_price($vegetable->price) }} <span class="text-xs font-normal text-slate-400">{{ __('/ kg') }}</span></span>
+                                    <span class="text-xs {{ $vegetable->available_quantity > 5 ? 'text-green-600' : 'text-rose-500' }}">
+                                        {{ $vegetable->available_quantity > 5 ? '✓' : '⚠' }} {{ format_price($vegetable->available_quantity) }} {{ __('kg') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+
+                    {{-- Explore More card at the end of the row --}}
+                    @if($items->count() > 5)
+                        <a href="{{ route('consumer.market', ['category' => $category]) }}" class="shrink-0 w-64 snap-start rounded-2xl border-2 border-dashed border-green-200 bg-white/60 flex flex-col items-center justify-center gap-2 p-6 hover:bg-green-50 hover:border-market-400 transition group">
+                            <span class="text-3xl group-hover:scale-110 transition-transform">{{ $categoryIcons[$category] ?? '🌱' }}</span>
+                            <span class="text-sm font-medium text-market-600">{{ __('Explore More') }}</span>
+                            <span class="text-xs text-slate-400">+{{ $items->count() - 5 }} {{ __('more') }}</span>
+                        </a>
+                    @endif
+                </div>
+            </div>
+        @endforeach
 
         <div class="rounded-2xl sky-gradient p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
@@ -274,4 +342,46 @@
             </a>
         </div>
     @endif
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const prompt = document.getElementById('dashboardLocationPrompt');
+    const allowBtn = document.getElementById('dashboardAllowLocation');
+    const dismissBtn = document.getElementById('dashboardDismissLocation');
+
+    if (!prompt) return;
+
+    // Check if previously dismissed
+    try {
+        if (localStorage.getItem('dash_location_dismissed')) {
+            prompt.classList.add('hidden');
+        }
+    } catch(e) {}
+
+    function requestLocation() {
+        if (!navigator.geolocation) {
+            alert('{{ __('Geolocation is not supported by your browser.') }}');
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            // Redirect to market page with coordinates pre-filled for proximity
+            window.location.href = '{{ route("consumer.market") }}?near_lat=' + pos.coords.latitude + '&near_lng=' + pos.coords.longitude + '&radius=25';
+        }, function () {
+            alert('{{ __('Please enable location access to find nearby products.') }}');
+            prompt.classList.add('hidden');
+        });
+    }
+
+    allowBtn.addEventListener('click', function () {
+        requestLocation();
+    });
+
+    dismissBtn.addEventListener('click', function () {
+        prompt.classList.add('hidden');
+        try { localStorage.setItem('dash_location_dismissed', '1'); } catch(e) {}
+    });
+});
+</script>
 @endsection

@@ -39,6 +39,12 @@
                     <div class="flex items-center gap-2 text-sm text-slate-500 mb-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         {{ __('Sold by') }} <strong class="text-slate-700">{{ $vegetable->vendor->name }}</strong>
+                        @if($vegetable->vendor->city)
+                            <span class="ml-2 inline-flex items-center gap-1 text-xs text-slate-400">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                {{ $vegetable->vendor->city }}
+                            </span>
+                        @endif
                     </div>
                     <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ $vegetable->localized_name }}</h1>
 
@@ -144,10 +150,43 @@
                     <div class="flex items-center gap-2">💳 {{ __('Pay with eSewa or Khalti') }}</div>
                 </div>
             </div>
+
+            {{-- Vendor location map --}}
+            @if($vegetable->vendor->latitude && $vegetable->vendor->longitude)
+                <div class="mt-6 rounded-2xl bg-white border border-green-100 p-5">
+                    <h3 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-market-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        {{ __('Vendor Location') }}
+                    </h3>
+                    <div id="vendorMap" class="w-full h-48 rounded-xl border border-slate-200 overflow-hidden"></div>
+                    @if($vegetable->vendor->city)
+                        <p class="text-xs text-slate-400 mt-2">{{ $vegetable->vendor->city }}{{ $vegetable->vendor->address ? ' — ' . $vegetable->vendor->address : '' }}</p>
+                    @endif
+                </div>
+            @endif
         </div>
     </div>
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Vendor map
+        document.addEventListener('DOMContentLoaded', function () {
+            const mapEl = document.getElementById('vendorMap');
+            if (mapEl) {
+                const lat = {{ $vegetable->vendor->latitude ?? 'null' }};
+                const lng = {{ $vegetable->vendor->longitude ?? 'null' }};
+                if (lat && lng) {
+                    const map = L.map('vendorMap', { zoomControl: false, scrollWheelZoom: false }).setView([lat, lng], 14);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap',
+                        maxZoom: 18,
+                    }).addTo(map);
+                    L.marker([lat, lng]).addTo(map);
+                }
+            }
+        });
+
         const pricePerKg = {{ $vegetable->price }};
         const maxQty = {{ $vegetable->available_quantity }};
 
